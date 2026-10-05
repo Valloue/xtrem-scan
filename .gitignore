@@ -1,0 +1,56 @@
+# Privé / local (non publié sur GitHub)
+.cursor/
+docs/
+PROJECT_CONTEXT.md
+
+# Build
+bin/
+obj/
+[Bb]uild/
+[Oo]ut/
+x64/
+x86/
+ARM64/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.nupkg
+project.lock.json
+artifacts/
+
+# Publish / installer
+publish/
+Installer/Output/
+*.exe
+*.msi
+*.msix
+*.appx
+
+# Logs & local data
+*.log
+logs/
+.DS_Store
+Thumbs.db
+
+# Secrets / env
+.env
+.env.*
+!.env.example
+*.pem
+*.pfx
+secrets/
+**/appsettings.*.local.json
+
+# IDE
+.idea/
+*.swp
+*~
+
+# OS
+desktop.ini
+
+# Nextcloud / sync noise
+.~lock.*
+*.tmp
