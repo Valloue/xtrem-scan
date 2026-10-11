@@ -1,0 +1,22 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XtremScan", "src\XtremScan\XtremScan.csproj", "{B7E4A1C2-6F0D-4E8A-9C31-2A5D8F0E4B17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XtremScan.Tests", "tests\XtremScan.Tests\XtremScan.Tests.csproj", "{C8F5B2D3-7A1E-4F9B-8D42-3B6E9A1F5C28}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B7E4A1C2-6F0D-4E8A-9C31-2A5D8F0E4B17}.Debug|x64.ActiveCfg = Debug|x64
+		{B7E4A1C2-6F0D-4E8A-9C31-2A5D8F0E4B17}.Debug|x64.Build.0 = Debug|x64
+		{B7E4A1C2-6F0D-4E8A-9C31-2A5D8F0E4B17}.Release|x64.ActiveCfg = Release|x64
+		{B7E4A1C2-6F0D-4E8A-9C31-2A5D8F0E4B17}.Release|x64.Build.0 = Release|x64
+		{C8F5B2D3-7A1E-4F9B-8D42-3B6E9A1F5C28}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C8F5B2D3-7A1E-4F9B-8D42-3B6E9A1F5C28}.Debug|x64.Build.0 = Debug|Any CPU
+		{C8F5B2D3-7A1E-4F9B-8D42-3B6E9A1F5C28}.Release|x64.ActiveCfg = Release|Any CPU
+		{C8F5B2D3-7A1E-4F9B-8D42-3B6E9A1F5C28}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

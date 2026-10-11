@@ -1,0 +1,71 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:XtremScan.Converters">
+
+    <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+    <conv:StringToVisibilityConverter x:Key="StringToVis" />
+
+    <Style x:Key="PlainCheckBox" TargetType="CheckBox">
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Border
+                            Width="18"
+                            Height="18"
+                            BorderBrush="{ThemeResource TextControlForeground}"
+                            BorderThickness="2"
+                            CornerRadius="4">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="12"
+                                Text="✓"
+                                Visibility="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVis}}" />
+                        </Border>
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ResourceDictionary.ThemeDictionaries>
+        <!-- Orange de l'icône #FF751F. Le bouton sombre utilise Light2, le bouton clair Dark1. -->
+        <ResourceDictionary x:Key="Default">
+            <Color x:Key="SystemAccentColor">#FFFF751F</Color>
+            <Color x:Key="SystemAccentColorDark1">#FFE06614</Color>
+            <Color x:Key="SystemAccentColorDark2">#FFC45510</Color>
+            <Color x:Key="SystemAccentColorDark3">#FF9A400C</Color>
+            <Color x:Key="SystemAccentColorLight1">#FFFF8C3A</Color>
+            <Color x:Key="SystemAccentColorLight2">#FFFF751F</Color>
+            <Color x:Key="SystemAccentColorLight3">#FFFFB07A</Color>
+            <SolidColorBrush x:Key="TextOnAccentFillColorPrimaryBrush" Color="#FF1A1008" />
+            <SolidColorBrush x:Key="TextOnAccentFillColorSecondaryBrush" Color="#FF1A1008" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <Color x:Key="SystemAccentColor">#FFFF751F</Color>
+            <Color x:Key="SystemAccentColorDark1">#FFE06614</Color>
+            <Color x:Key="SystemAccentColorDark2">#FFC45510</Color>
+            <Color x:Key="SystemAccentColorDark3">#FF9A400C</Color>
+            <Color x:Key="SystemAccentColorLight1">#FFFF8C3A</Color>
+            <Color x:Key="SystemAccentColorLight2">#FFFF751F</Color>
+            <Color x:Key="SystemAccentColorLight3">#FFFFB07A</Color>
+            <SolidColorBrush x:Key="TextOnAccentFillColorPrimaryBrush" Color="#FF1A1008" />
+            <SolidColorBrush x:Key="TextOnAccentFillColorSecondaryBrush" Color="#FF1A1008" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Light">
+            <Color x:Key="SystemAccentColor">#FFFF751F</Color>
+            <Color x:Key="SystemAccentColorDark1">#FFFF751F</Color>
+            <Color x:Key="SystemAccentColorDark2">#FFC45510</Color>
+            <Color x:Key="SystemAccentColorDark3">#FF8E3A0C</Color>
+            <Color x:Key="SystemAccentColorLight1">#FFFF8C3A</Color>
+            <Color x:Key="SystemAccentColorLight2">#FFFFB07A</Color>
+            <Color x:Key="SystemAccentColorLight3">#FFFFD4B0</Color>
+            <SolidColorBrush x:Key="TextOnAccentFillColorPrimaryBrush" Color="#FF1A1008" />
+            <SolidColorBrush x:Key="TextOnAccentFillColorSecondaryBrush" Color="#FF1A1008" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

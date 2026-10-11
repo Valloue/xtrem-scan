@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="XtremScan.Pages.AboutPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <StackPanel Padding="24" Spacing="8" MaxWidth="640" HorizontalAlignment="Left">
+        <TextBlock Text="Xtrem Scan" Style="{ThemeResource TitleTextBlockStyle}" />
+        <TextBlock Text="{x:Bind ViewModel.VersionText, Mode=OneTime}" />
+        <TextBlock
+            TextWrapping="Wrap"
+            Text="Scan depuis une imprimante ou un scanner, à la résolution que le pilote accepte vraiment. Le maximum du pilote est proposé, y compris au-delà des choix de l'application Scan de Windows." />
+    </StackPanel>
+</Page>

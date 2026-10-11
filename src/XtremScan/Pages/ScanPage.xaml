@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="XtremScan.Pages.ScanPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:XtremScan.ViewModels"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Padding="24" ColumnSpacing="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer Grid.Column="0">
+            <StackPanel Spacing="12">
+                <TextBlock Text="Scanner" Style="{ThemeResource TitleTextBlockStyle}" />
+
+                <ComboBox
+                    Header="Appareil"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind ViewModel.Devices, Mode=OneWay}"
+                    SelectedItem="{x:Bind ViewModel.SelectedDevice, Mode=TwoWay}"
+                    DisplayMemberPath="Name" />
+
+                <Button Content="Actualiser" Command="{x:Bind ViewModel.RefreshCommand}" />
+
+                <ComboBox
+                    Header="Source"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind ViewModel.Sources, Mode=OneWay}"
+                    SelectedItem="{x:Bind ViewModel.SelectedSource, Mode=TwoWay}"
+                    DisplayMemberPath="Label" />
+
+                <ComboBox
+                    x:Name="ResolutionList"
+                    Header="Résolution"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind ViewModel.ResolutionChoices, Mode=OneWay}"
+                    SelectionChanged="ResolutionList_SelectionChanged"
+                    Visibility="{x:Bind ViewModel.UseResolutionList, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+
+                <NumberBox
+                    x:Name="ResolutionBox"
+                    Header="Résolution (dpi)"
+                    HorizontalAlignment="Stretch"
+                    SpinButtonPlacementMode="Inline"
+                    Minimum="{x:Bind ViewModel.MinimumDpi, Mode=OneWay}"
+                    Maximum="{x:Bind ViewModel.MaximumDpi, Mode=OneWay}"
+                    SmallChange="{x:Bind ViewModel.StepDpi, Mode=OneWay}"
+                    ValueChanged="ResolutionBox_ValueChanged"
+                    Visibility="{x:Bind ViewModel.UseResolutionList, Mode=OneWay, Converter={StaticResource BoolToVis}, ConverterParameter=invert}" />
+
+                <Button Content="Maximum du pilote" Command="{x:Bind ViewModel.UseMaximumCommand}" />
+                <TextBlock Text="{x:Bind ViewModel.ResolutionSummary, Mode=OneWay}" />
+                <TextBlock Text="{x:Bind ViewModel.OpticalSummary, Mode=OneWay}" Opacity="0.8" />
+
+                <ComboBox
+                    Header="Couleur"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind ViewModel.ColorModes, Mode=OneWay}"
+                    SelectedItem="{x:Bind ViewModel.SelectedColor, Mode=TwoWay}"
+                    DisplayMemberPath="Label" />
+
+                <ComboBox
+                    Header="Profondeur"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind ViewModel.BitDepths, Mode=OneWay}"
+                    SelectedItem="{x:Bind ViewModel.SelectedDepth, Mode=TwoWay}"
+                    DisplayMemberPath="Label" />
+
+                <ComboBox
+                    Header="Format"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind ViewModel.Formats, Mode=OneWay}"
+                    SelectedItem="{x:Bind ViewModel.SelectedFormat, Mode=TwoWay}"
+                    DisplayMemberPath="Label" />
+
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Content="Aperçu" Command="{x:Bind ViewModel.PreviewCommand}" />
+                    <Button Content="{x:Bind ViewModel.ScanLabel, Mode=OneWay}" Style="{ThemeResource AccentButtonStyle}" Command="{x:Bind ViewModel.ScanCommand}">
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Enter" Modifiers="Control" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
+                    <ProgressRing IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}" Width="28" Height="28" />
+                </StackPanel>
+
+                <ProgressBar
+                    Maximum="100"
+                    Value="{x:Bind ViewModel.ScanPercent, Mode=OneWay}"
+                    Visibility="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+                <TextBlock
+                    Text="{x:Bind ViewModel.ScanPercentText, Mode=OneWay}"
+                    Visibility="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+
+                <InfoBar
+                    IsOpen="True"
+                    Visibility="{x:Bind ViewModel.Warning, Mode=OneWay, Converter={StaticResource StringToVis}}"
+                    Severity="Warning"
+                    IsClosable="False"
+                    Message="{x:Bind ViewModel.Warning, Mode=OneWay}" />
+                <InfoBar
+                    IsOpen="True"
+                    Visibility="{x:Bind ViewModel.Error, Mode=OneWay, Converter={StaticResource StringToVis}}"
+                    Severity="Error"
+                    IsClosable="False"
+                    Message="{x:Bind ViewModel.Error, Mode=OneWay}" />
+                <TextBlock Text="{x:Bind ViewModel.Status, Mode=OneWay}" TextWrapping="Wrap" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Column="1" RowSpacing="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="#252A35" CornerRadius="8">
+                <Grid>
+                    <Image
+                        Source="{x:Bind ViewModel.Preview, Mode=OneWay}"
+                        Stretch="Uniform"
+                        Margin="12"
+                        Visibility="{x:Bind ViewModel.HasDocument, Mode=OneWay, Converter={StaticResource BoolToVis}, ConverterParameter=invert}" />
+                    <Grid
+                        x:Name="Stage"
+                        Margin="8"
+                        Background="Transparent"
+                        Visibility="{x:Bind ViewModel.HasDocument, Mode=OneWay, Converter={StaticResource BoolToVis}}"
+                        PointerPressed="Stage_PointerPressed"
+                        PointerMoved="Stage_PointerMoved"
+                        PointerReleased="Stage_PointerReleased"
+                        PointerCanceled="Stage_PointerReleased"
+                        SizeChanged="Stage_SizeChanged">
+                        <ScrollViewer
+                            x:Name="PageView"
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollMode="Enabled"
+                            VerticalScrollMode="Enabled"
+                            ZoomMode="Disabled">
+                            <Grid
+                                x:Name="PageHost"
+                                PointerWheelChanged="PageView_Wheel"
+                                PointerPressed="PageView_PointerPressed"
+                                PointerMoved="PageView_PointerMoved"
+                                PointerReleased="PageView_PointerReleased"
+                                PointerCanceled="PageView_PointerReleased">
+                                <Viewbox
+                                    x:Name="PageBox"
+                                    Margin="0,40,0,8"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Stretch="Uniform">
+                                    <Grid x:Name="Sheet">
+                                <Rectangle Fill="White" />
+                                <Grid x:Name="SpinMove" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Grid
+                                        x:Name="SpinHost"
+                                        RenderTransformOrigin="0.5,0.5">
+                                        <Image x:Name="PageImage" Stretch="Fill" />
+                                    </Grid>
+                                </Grid>
+                                <Grid x:Name="ZoomHost" IsHitTestVisible="False" Visibility="Collapsed">
+                                    <Rectangle Fill="White" />
+                                    <Grid x:Name="ZoomMove">
+                                        <Grid x:Name="ZoomFrame">
+                                            <Grid
+                                                x:Name="ZoomSpin"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                RenderTransformOrigin="0.5,0.5">
+                                                <Image x:Name="ZoomImage" Stretch="Fill" />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Path x:Name="CropShade" Fill="#99000000" IsHitTestVisible="False" />
+                                <Canvas x:Name="WordCanvas" IsHitTestVisible="False" />
+                                <Canvas IsHitTestVisible="False">
+                                    <Polygon
+                                        x:Name="CropShape"
+                                        Stroke="White"
+                                        StrokeThickness="1.5"
+                                        Fill="Transparent" />
+                                </Canvas>
+                                <Canvas x:Name="HandleCanvas" IsHitTestVisible="False" />
+                            </Grid>
+                                </Viewbox>
+                            </Grid>
+                        </ScrollViewer>
+                        <Canvas IsHitTestVisible="False">
+                            <Ellipse x:Name="RotateHandle" Width="28" Height="28" Fill="#FF751F" />
+                        </Canvas>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <TextBlock
+                Grid.Row="1"
+                Opacity="0.8"
+                TextWrapping="Wrap"
+                Text="La page est une A4. 90° et Redresser la passent en portrait ou en paysage. La roue tourne seulement l'image. À 100 % elle a sa taille réelle d'après le dpi du scanner. Glisse-la pour la déplacer, le curseur la zoome. Ctrl et la molette agrandissent l'aperçu."
+                Visibility="{x:Bind ViewModel.HasDocument, Mode=OneWay, Converter={StaticResource BoolToVis}}" />
+
+            <StackPanel
+                Grid.Row="2"
+                Spacing="8"
+                Visibility="{x:Bind ViewModel.HasDocument, Mode=OneWay, Converter={StaticResource BoolToVis}}">
+                <Grid HorizontalAlignment="Center" ColumnSpacing="12" Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Command="{x:Bind ViewModel.RotateLeftCommand}"
+                        ToolTipService.ToolTip="Tourner la page de 90° vers la gauche">
+                        <StackPanel Spacing="2">
+                            <FontIcon
+                                Glyph="&#xE7AD;"
+                                FontSize="22"
+                                HorizontalAlignment="Center"
+                                RenderTransformOrigin="0.5,0.5">
+                                <FontIcon.RenderTransform>
+                                    <ScaleTransform ScaleX="-1" />
+                                </FontIcon.RenderTransform>
+                            </FontIcon>
+                            <TextBlock HorizontalAlignment="Center" FontSize="12" Text="90° gauche" />
+                        </StackPanel>
+                    </Button>
+                    <StackPanel Grid.Column="1" Spacing="0">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            FontSize="16"
+                            Text="{x:Bind ViewModel.AngleText, Mode=OneWay}" />
+                        <Canvas
+                            x:Name="AngleWheel"
+                            Width="360"
+                            Height="46"
+                            Margin="0,2,0,0"
+                            Background="Transparent"
+                            PointerPressed="Wheel_PointerPressed"
+                            PointerMoved="Wheel_PointerMoved"
+                            PointerReleased="Wheel_PointerReleased"
+                            PointerCanceled="Wheel_PointerReleased"
+                            SizeChanged="Wheel_SizeChanged" />
+                    </StackPanel>
+                    <Button
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                        Command="{x:Bind ViewModel.RotateRightCommand}"
+                        ToolTipService.ToolTip="Tourner la page de 90° vers la droite">
+                        <StackPanel Spacing="2">
+                            <FontIcon Glyph="&#xE7AD;" FontSize="22" HorizontalAlignment="Center" />
+                            <TextBlock HorizontalAlignment="Center" FontSize="12" Text="90° droite" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+                <ListView
+                    Height="112"
+                    SelectionMode="Single"
+                    CanDragItems="True"
+                    CanReorderItems="True"
+                    AllowDrop="True"
+                    ItemsSource="{x:Bind ViewModel.Pages, Mode=OneWay}"
+                    SelectedItem="{x:Bind ViewModel.SelectedPage, Mode=TwoWay}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                    ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:DocumentPage">
+                            <Image Width="72" Height="96" Source="{x:Bind Thumbnail, Mode=OneWay}" Stretch="Uniform" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <TextBlock Opacity="0.8" Text="{x:Bind ViewModel.OcrSummary, Mode=OneWay}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
+                    <TextBlock VerticalAlignment="Center" Text="Zoom" />
+                    <Slider
+                        x:Name="ZoomSlider"
+                        Width="220"
+                        Minimum="0.25"
+                        Maximum="4"
+                        StepFrequency="0.01"
+                        Value="{x:Bind ViewModel.Zoom, Mode=TwoWay}"
+                        ValueChanged="ZoomSlider_ValueChanged" />
+                    <TextBlock VerticalAlignment="Center" MinWidth="48" Text="{x:Bind ViewModel.ZoomText, Mode=OneWay}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Content="Enregistrer le PDF" Style="{ThemeResource AccentButtonStyle}" Command="{x:Bind ViewModel.SaveDocumentCommand}" />
+                    <Button Content="Page entière" Command="{x:Bind ViewModel.ResetCropCommand}" />
+                    <Button Content="Redresser" Command="{x:Bind ViewModel.StraightenCommand}" />
+                    <Button Content="Retirer la page" Command="{x:Bind ViewModel.RemovePageCommand}" />
+                    <Button Content="Nouveau document" Command="{x:Bind ViewModel.ClearDocumentCommand}" />
+                    <Button Content="Reconnaître le texte" Click="Recognize_Click" IsEnabled="{x:Bind ViewModel.CanRecognizeText, Mode=OneWay}" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

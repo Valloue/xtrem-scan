@@ -2,6 +2,10 @@
 .cursor/
 docs/
 PROJECT_CONTEXT.md
+README.md
+run.bat
+BUILD-SETUP.bat
+tests/
 
 # Build
 bin/
