@@ -6,6 +6,7 @@ README.md
 run.bat
 BUILD-SETUP.bat
 tests/
+web/
 
 # Build
 bin/
